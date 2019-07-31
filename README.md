@@ -2,10 +2,6 @@
 DataGrouper是一个数据分组器，可以把List按照指定的规则来进行分组。<br>
 内置了拼音分组器，可以很方便地把列表像微信联系人列表那样按照拼音进行分组，使用pinyin4j来获取拼音。
 
-## 下载
-- [datagrouper-0.0.1.jar](https://raw.githubusercontent.com/ffpy/DataGrouper/master/download/datagrouper-0.0.1.jar)
-- [pinyin4j-2.5.1.jar](https://raw.githubusercontent.com/ffpy/DataGrouper/master/download/pinyin4j-2.5.1.jar)
-
 ## 开始
 #### Student.java
 ```
