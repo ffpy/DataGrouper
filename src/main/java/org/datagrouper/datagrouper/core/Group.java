@@ -5,21 +5,21 @@ import java.util.List;
 /**
  * 分组接口
  */
-public interface Group<E> {
+public interface Group<K, E> {
 
     /**
-     * 获取分组名
+     * 获取分组Key
      *
-     * @return 分组名
+     * @return 分组Key
      */
-    String getName();
+    K getKey();
 
     /**
-     * 设置分组名
+     * 设置分组Key
      *
-     * @param name 分组名
+     * @param key 分组Key
      */
-    void setName(String name);
+    void setKey(K key);
 
     /**
      * 获取成员列表

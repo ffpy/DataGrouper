@@ -33,7 +33,7 @@ public class StudentGrouper extends PinyinGrouper<Student, StudentGroup> {
     public Map<String, MemberComparator<Student>> memberComparator() {
         // 顶置超级管理员
         Map<String, MemberComparator<Student>> map = new HashMap<>(2);
-        map.put(GROUP_ID_LIKE, new MemberComparator<>((s1, s2) -> {
+        map.put(GROUP_KEY_LIKE, new MemberComparator<>((s1, s2) -> {
             boolean s1IsSuper = s1.getName().startsWith("super");
             boolean s2IsSuper = s2.getName().startsWith("super");
             return Boolean.compare(s2IsSuper, s1IsSuper);

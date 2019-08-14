@@ -2,8 +2,6 @@ package org.datagrouper.datagrouper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.datagrouper.datagrouper.core.Group;
-import org.datagrouper.datagrouper.core.GroupKey;
-import org.datagrouper.datagrouper.core.GroupKeys;
 import org.datagrouper.datagrouper.core.Grouper;
 import org.datagrouper.datagrouper.core.MemberComparator;
 import org.datagrouper.datagrouper.utils.HashMapUtils;
@@ -22,13 +20,13 @@ import java.util.Objects;
  * @param <E> 元素类型
  * @param <G> 分组类型
  */
-public abstract class PinyinGrouper<E, G extends Group<E>> implements Grouper<E, G> {
+public abstract class PinyinGrouper<E, G extends Group<String, E>> implements Grouper<String, E, G> {
 
-    /** 收藏分组ID */
-    public static final String GROUP_ID_LIKE = "*";
+    /** 收藏分组Key */
+    public static final String GROUP_KEY_LIKE = "*";
 
-    /** 其他分组ID */
-    public static final String GROUP_ID_OTHER = "#";
+    /** 其他分组Key */
+    public static final String GROUP_KEY_OTHER = "#";
 
     /** 拼音缓存（str -> 拼音str） */
     private final Map<String, String> pinyinMap;
@@ -44,7 +42,7 @@ public abstract class PinyinGrouper<E, G extends Group<E>> implements Grouper<E,
     }
 
     public PinyinGrouper(int dataSize) {
-        this(GROUP_ID_LIKE, GROUP_ID_OTHER, dataSize);
+        this(GROUP_KEY_LIKE, GROUP_KEY_OTHER, dataSize);
     }
 
     public PinyinGrouper(String likeGroupName, String otherGroupName) {
@@ -90,7 +88,7 @@ public abstract class PinyinGrouper<E, G extends Group<E>> implements Grouper<E,
         }
 
         if (like(e)) {
-            return GROUP_ID_LIKE;
+            return GROUP_KEY_LIKE;
         }
 
         String pinyin = getPinyin(key);
@@ -100,22 +98,7 @@ public abstract class PinyinGrouper<E, G extends Group<E>> implements Grouper<E,
             return String.valueOf(firstChar);
         }
 
-        return GROUP_ID_OTHER;
-    }
-
-    @Override
-    public GroupKeys groupKeys() {
-        final char startChar = 'A';
-        final char endChar = 'Z';
-        GroupKeys groupKeys = new GroupKeys(32);
-
-        groupKeys.addLast(new GroupKey(GROUP_ID_LIKE, likeGroupName));
-        for (char c = startChar; c <= endChar; c++) {
-            groupKeys.addLast(new GroupKey(String.valueOf(c)));
-        }
-        groupKeys.addLast(new GroupKey(GROUP_ID_OTHER, otherGroupName));
-
-        return groupKeys;
+        return GROUP_KEY_OTHER;
     }
 
     @Override
@@ -126,6 +109,20 @@ public abstract class PinyinGrouper<E, G extends Group<E>> implements Grouper<E,
     @Override
     public Map<String, MemberComparator<E>> memberComparator() {
         return null;
+    }
+
+    @Override
+    public Comparator<G> groupComparator() {
+        return Comparator.comparingInt((G g) -> getGroupType(g.getKey())).thenComparing(Group::getKey);
+    }
+
+    private static int getGroupType(String key) {
+        if (GROUP_KEY_LIKE.equals(key)) {
+            return 2;
+        } else if (GROUP_KEY_OTHER.equals(key)) {
+            return 0;
+        }
+        return 1;
     }
 
     /**

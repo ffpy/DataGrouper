@@ -6,20 +6,19 @@ import org.datagrouper.datagrouper.core.Group;
 import java.util.List;
 
 @ToString
-public class StudentGroup implements Group<Student> {
+public class StudentGroup implements Group<String, Student> {
 
-    private String name;
-
+    private String key;
     private List<Student> members;
 
     @Override
-    public String getName() {
-        return name;
+    public String getKey() {
+        return key;
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public void setKey(String name) {
+        this.key = name;
     }
 
     @Override
