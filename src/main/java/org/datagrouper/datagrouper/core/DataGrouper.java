@@ -3,11 +3,13 @@ package org.datagrouper.datagrouper.core;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 数据分组器
@@ -21,7 +23,7 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
     private List<E> data;
 
     /** 分组Key -> 分组 */
-    private Map<K, G> groupMap = new HashMap<>();
+    private Map<K, G> groupMap;
 
     /** 分组Key -> 组内排序 */
     private Map<K, MemberComparator<E>> memberComparatorMap;
@@ -55,6 +57,7 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
         // 初始化数据
         memberComparatorMap = grouper.memberComparator();
         defaultComparator = grouper.defaultComparator();
+        groupMap = defaultComparator == null ? new LinkedHashMap<>() : new HashMap<>();
 
         // 分组
         for (E item : data) {
@@ -63,7 +66,7 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
                 if (key != null) {
                     G group = groupMap.get(key);
                     if (group == null) {
-                        group = grouper.newGroup();
+                        group = grouper.newGroup(item);
                         group.setKey(key);
                         group.setMembers(new LinkedList<>());
                         groupMap.put(key, group);
@@ -75,13 +78,19 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
 
         // 组内排序
         for (G group : groupMap.values()) {
-            group.getMembers().sort(getComparator(group));
+            Comparator<E> comparator = getComparator(group);
+            if (comparator != null) {
+                group.getMembers().sort(comparator);
+            }
         }
 
         // 构造分组列表并执行组间排序
-        return groupMap.values().stream()
-                .sorted(grouper.groupComparator())
-                .collect(Collectors.toList());
+        Stream<G> stream = groupMap.values().stream();
+        Comparator<G> groupComparator = grouper.groupComparator();
+        if (groupComparator != null) {
+            stream = stream.sorted(groupComparator);
+        }
+        return stream.collect(Collectors.toList());
     }
 
     /**

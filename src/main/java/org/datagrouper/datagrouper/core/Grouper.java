@@ -1,7 +1,6 @@
 package org.datagrouper.datagrouper.core;
 
-import com.sun.istack.internal.Nullable;
-
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ public interface Grouper<K, E, G extends Group<K, E>> {
      *
      * @return 新创建的Group
      */
-    G newGroup();
+    G newGroup(E e);
 
     /**
      * 给元素分配分组，返回null不进行分组
@@ -27,10 +26,11 @@ public interface Grouper<K, E, G extends Group<K, E>> {
     K alloc(E e);
 
     /**
-     * 返回默认的组内排序方法
+     * 返回默认的组内排序方法，返回null则表示不排序
      *
      * @return 默认的组内排序方法
      */
+    @Nullable
     Comparator<E> defaultComparator();
 
     /**
@@ -42,9 +42,10 @@ public interface Grouper<K, E, G extends Group<K, E>> {
     Map<K, MemberComparator<E>> memberComparator();
 
     /**
-     * 返回分组排序方法
+     * 返回分组排序方法，返回null表示不排序
      *
      * @return 分组排序方法
      */
+    @Nullable
     Comparator<G> groupComparator();
 }

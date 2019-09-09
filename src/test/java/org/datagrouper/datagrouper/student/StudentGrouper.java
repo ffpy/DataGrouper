@@ -25,7 +25,7 @@ public class StudentGrouper extends PinyinGrouper<Student, StudentGroup> {
     }
 
     @Override
-    public StudentGroup newGroup() {
+    public StudentGroup newGroup(Student student) {
         return new StudentGroup();
     }
 

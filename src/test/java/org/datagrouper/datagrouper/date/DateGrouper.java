@@ -10,8 +10,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class DateGrouper implements Grouper<LocalDate, LocalDateTime, DateGroup> {
+
     @Override
-    public DateGroup newGroup() {
+    public DateGroup newGroup(LocalDateTime dateTime) {
         return new DateGroup();
     }
 
