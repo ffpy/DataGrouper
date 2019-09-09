@@ -59,7 +59,7 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
         // 分组
         for (E item : data) {
             if (item != null) {
-                K key = grouper.alloter(item);
+                K key = grouper.alloc(item);
                 if (key != null) {
                     G group = groupMap.get(key);
                     if (group == null) {

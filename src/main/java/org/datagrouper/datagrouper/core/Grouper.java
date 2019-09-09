@@ -24,7 +24,7 @@ public interface Grouper<K, E, G extends Group<K, E>> {
      * @return 对应的分组Key
      */
     @Nullable
-    K alloter(E e);
+    K alloc(E e);
 
     /**
      * 返回默认的组内排序方法

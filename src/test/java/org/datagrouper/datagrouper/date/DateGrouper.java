@@ -16,7 +16,7 @@ public class DateGrouper implements Grouper<LocalDate, LocalDateTime, DateGroup>
     }
 
     @Override
-    public LocalDate alloter(LocalDateTime time) {
+    public LocalDate alloc(LocalDateTime time) {
         return time.toLocalDate();
     }
 

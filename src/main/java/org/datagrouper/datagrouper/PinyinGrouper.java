@@ -81,7 +81,7 @@ public abstract class PinyinGrouper<E, G extends Group<String, E>> implements Gr
     }
 
     @Override
-    public String alloter(E e) {
+    public String alloc(E e) {
         String key = key(e);
         if (StringUtils.isEmpty(key)) {
             return null;
