@@ -12,9 +12,9 @@ public class Groups<K, E, G extends Group<K, E>> {
     private List<E> data;
     private Function<E, G> newGroup;
     private Function<E, K> alloc;
-    private Supplier<Comparator<E>> defaultComparator = () -> null;
-    private Supplier<Map<K, MemberComparator<E>>> memberComparator = () -> null;
-    private Supplier<Comparator<G>> groupComparator = () -> null;
+    private Comparator<E> defaultComparator;
+    private Map<K, MemberComparator<E>> memberComparator;
+    private Comparator<G> groupComparator;
 
     public static <K, E, G extends Group<K, E>> Groups<K, E, G> of(List<E> data, Class<K> keyType, Class<G> groupType) {
         return new Groups<K, E, G>(data);
@@ -34,17 +34,17 @@ public class Groups<K, E, G extends Group<K, E>> {
         return this;
     }
 
-    public Groups<K, E, G> defaultComparator(Supplier<Comparator<E>> defaultComparator) {
+    public Groups<K, E, G> defaultComparator(Comparator<E> defaultComparator) {
         this.defaultComparator = Objects.requireNonNull(defaultComparator);
         return this;
     }
 
-    public Groups<K, E, G> memberComparator(Supplier<Map<K, MemberComparator<E>>> memberComparator) {
+    public Groups<K, E, G> memberComparator(Map<K, MemberComparator<E>> memberComparator) {
         this.memberComparator = Objects.requireNonNull(memberComparator);
         return this;
     }
 
-    public Groups<K, E, G> groupComparator(Supplier<Comparator<G>> groupComparator) {
+    public Groups<K, E, G> groupComparator(Comparator<G> groupComparator) {
         this.groupComparator = Objects.requireNonNull(groupComparator);
         return this;
     }
@@ -68,19 +68,19 @@ public class Groups<K, E, G extends Group<K, E>> {
             @Nullable
             @Override
             public Comparator<E> defaultComparator() {
-                return defaultComparator.get();
+                return defaultComparator;
             }
 
             @Nullable
             @Override
             public Map<K, MemberComparator<E>> memberComparator() {
-                return memberComparator.get();
+                return memberComparator;
             }
 
             @Nullable
             @Override
             public Comparator<G> groupComparator() {
-                return groupComparator.get();
+                return groupComparator;
             }
         }).groups();
     }

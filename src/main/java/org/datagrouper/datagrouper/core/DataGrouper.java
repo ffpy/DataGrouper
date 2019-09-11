@@ -22,9 +22,6 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
     /** 数据集 */
     private List<E> data;
 
-    /** 分组Key -> 分组 */
-    private Map<K, G> groupMap;
-
     /** 分组Key -> 组内排序 */
     private Map<K, MemberComparator<E>> memberComparatorMap;
 
@@ -57,7 +54,8 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
         // 初始化数据
         memberComparatorMap = grouper.memberComparator();
         defaultComparator = grouper.defaultComparator();
-        groupMap = defaultComparator == null ? new LinkedHashMap<>() : new HashMap<>();
+        Comparator<G> groupComparator = grouper.groupComparator();
+        Map<K, G> groupMap = groupComparator == null ? new LinkedHashMap<>() : new HashMap<>();
 
         // 分组
         for (E item : data) {
@@ -86,7 +84,6 @@ public class DataGrouper<K, E, G extends Group<K, E>> {
 
         // 构造分组列表并执行组间排序
         Stream<G> stream = groupMap.values().stream();
-        Comparator<G> groupComparator = grouper.groupComparator();
         if (groupComparator != null) {
             stream = stream.sorted(groupComparator);
         }
